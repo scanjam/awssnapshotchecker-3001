@@ -1,12 +1,4 @@
-# python3testing
-Demo python3 projects
+# AWS Snapshot Checker
+this is a demo file to test the snapshot of ec2 instances in AWS
 
 ## Running
-
-This project requires python 3 and the requests package
-
-First, install pipenv. Then:
-
-'''
-pipenv install
-pipenv run "python3 meteors/find_meteors.py"
