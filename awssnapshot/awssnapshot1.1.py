@@ -5,8 +5,11 @@ import click
 session = boto3.Session(profile_name='awssnapshot')
 ec2 = session.resource('ec2')
 
+@click.group()
+def instances():
+    """Commands for Instances"""
 
-@click.command()
+@instances.command('list')
 @click.option('--project', default=None,
     help="Only instances for project (tag Project:<name>)")
 def list_instances(project):
@@ -33,7 +36,24 @@ def list_instances(project):
 
         return
 
+@instances.command('stop')
+@click.option('--project', default=None,
+    help='Only instances for project')
+def stop_instances(project):
+    "Stop EC2 Instances"
+    instances = []
 
+    if project:
+        filters = [{'Name':'tag:Project', 'Values':[project]}]
+        instances = ec2.instances.filter(Filters=filters)
+    else:
+        instances = ec2.instances.all()
+
+    for i in instances:
+        print("Stopping {0}...".format(i.id))
+        i.stop()
+
+        return
 
 if __name__ == '__main__':
-    list_instances()
+    instances()
