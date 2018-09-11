@@ -18,6 +18,33 @@ def filter_instances(project):
 def cli():
     """AWS Snapshot Manager"""
 
+@cli.group('snapshots')
+def snapshots():
+    """Commands for Snapshots"""
+
+@snapshots.command('list')
+@click.option('--project', default=None,
+    help="Only snapshots for project (tag Project:<name>)")
+def list_volumes(project):
+    "List EC2 snapshots"
+
+    instances = filter_instances(project)
+
+    for i in instances:
+     for v in i.volumes.all():
+        for s in v.snapshots.all():
+            print(", ".join((
+             i.id,
+             v.id,
+             s.id,
+             s.state,
+             s.progress,
+             s.start_time.strftime("%c"),
+             )))
+
+    return
+
+
 @cli.group('volumes')
 def volumes():
     """Commands for Volumes"""
@@ -47,6 +74,19 @@ def list_volumes(project):
 @cli.group('instances')
 def instances():
     """Commands for Instances"""
+
+@instances.command('snapshot')
+@click.option('--project', default=None,
+    help="Create Snapshots of Volumes (tag Project:<name>)")
+def create_snapshot(project):
+    "Create Snapshots for EC2 Instances"
+
+    instances = filter_instances(project)
+    for i in instances:
+            for v in i.volumes.all():
+                print("Creating Snapshot of {0}".format(v.id))
+                v.create_snapshot(Description="Created by Script")
+    return
 
 @instances.command('list')
 @click.option('--project', default=None,

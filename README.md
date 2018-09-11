@@ -10,6 +10,6 @@ Script uses the config files created by the aws cli
 
 'pipenv run python awssnapshot/awssnapshot1.x.py <command>'
 <--project=PROJECT TAG in AWS>"
-
-*command* is list, start, stop
+*commands* is instances, volumes, or snapshots
+*subcommand* is list, start, stop, create
 *project* is optional
